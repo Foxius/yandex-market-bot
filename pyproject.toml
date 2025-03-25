@@ -7,11 +7,11 @@ readme = "README.md"
 packages = [{include = "bot"}]
 
 [tool.poetry.dependencies]
-python = ">=3.13"  # Указываем минимальную версию Python
-aiogram = "^3.13.1"  # Последняя версия на момент 03.2025 (проверьте актуальность)
+python = ">=3.10"
+aiogram = "^3.13.1"
 requests = "^2.32.3"
 python-dotenv = "^1.0.1"
-colorlog = "^6.8.2"  # Стабильная версия
+colorlog = "^6.8.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
