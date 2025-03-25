@@ -75,14 +75,14 @@ def get_market_sku(business_id: str, api_token: str, shop_skus: list) -> dict:
 async def check_new_orders(bot: Bot, chat_id: str, api_token: str, campaign_id: str, business_id: str):
     headers = {"Api-Key": f"{api_token}", "Accept": "application/json"}
     response = requests.get(
-        f"{YANDEX_API_URL}/campaigns/{campaign_id}/orders?status=PROCESSING",
+        f"{YANDEX_API_URL}/campaigns/{campaign_id}/orders?status=PROCESSING&substatus=STARTED",
         headers=headers
     )
     
     if response.status_code == 200:
         orders = response.json().get("orders", [])
         sent_orders = load_sent_orders()
-        logger.info(f"Найдено {len(orders)} заказов в статусе PROCESSING")
+        logger.info(f"Найдено {len(orders)} заказов в статусе PROCESSING/STARTED")
         for order in orders:
             order_id = str(order["id"])
             if order_id not in sent_orders:
