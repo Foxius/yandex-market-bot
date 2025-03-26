@@ -2,6 +2,7 @@ import asyncio
 from aiogram import Bot
 from src.api.services import OrderService
 from src.utils.logging import logger
+from src.config.settings import settings
 
 async def periodic_check(bot: Bot, order_service: OrderService) -> None:
     """Periodically check for new orders.

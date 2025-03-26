@@ -5,6 +5,8 @@ services:
     build: .
     ports:
       - "8000:8000"  # Prometheus metrics
+    env_file:
+      - .env
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - CHAT_ID=${CHAT_ID}
@@ -18,8 +20,10 @@ services:
       - PROMETHEUS_PORT=8000
     depends_on:
       - redis
+    restart: unless-stopped
 
   redis:
     image: redis:6.2
     ports:
       - "6379:6379"
+    restart: unless-stopped
