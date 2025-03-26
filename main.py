@@ -56,7 +56,7 @@ async def periodic_check():
             logger.info("Проверка новых заказов завершена успешно")
         except Exception as e:
             logger.error(f"Ошибка при проверке заказов: {str(e)}")
-        await asyncio.sleep(300)  # Проверка каждые 5 минут
+        await asyncio.sleep(300)
 
 async def periodic_overdue_check():
     while True:
@@ -66,7 +66,7 @@ async def periodic_overdue_check():
             logger.info("Проверка просроченных заказов завершена успешно")
         except Exception as e:
             logger.error(f"Ошибка при проверке просроченных заказов: {str(e)}")
-        await asyncio.sleep(3600)  # Проверка каждый час
+        await asyncio.sleep(3600)
 
 async def main():
     try:

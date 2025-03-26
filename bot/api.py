@@ -285,25 +285,40 @@ async def check_overdue_orders(bot: Bot, chat_id: str, api_token: str, campaign_
         logger.info(f"Найдено {len(orders)} заказов в статусе READY_TO_SHIP")
         current_date = datetime.now()
         
+        # Загружаем список уже отправленных уведомлений о просрочках
+        overdue_notified_file = "overdue_notified.json"
+        if os.path.exists(overdue_notified_file):
+            with open(overdue_notified_file, "r") as f:
+                overdue_notified = json.load(f)
+        else:
+            overdue_notified = []
+
         for order in orders:
             order_id = str(order["id"])
             shipment_date_str = order.get("delivery", {}).get("shipments", [{}])[0].get("shipmentDate", "")
             if shipment_date_str:
                 try:
                     shipment_date = datetime.strptime(shipment_date_str, "%d-%m-%Y")
-                    if shipment_date < current_date:
-                        message = (
-                            f"⚠️ *Заказ #{order_id} просрочен!*\n"
-                            f"⏰ Дедлайн отгрузки: {shipment_date_str}\n"
-                            f"Статус: PROCESSING/READY_TO_SHIP"
-                        )
-                        await bot.send_message(
-                            chat_id,
-                            message,
-                            parse_mode="Markdown",
-                            disable_notification=False
-                        )
-                        logger.warning(f"Отправлено уведомление о просроченном заказе #{order_id}")
+                    # Проверяем, просрочен ли заказ на следующий день
+                    if (current_date - shipment_date).days >= 1:  # Только на следующий день после дедлайна
+                        if order_id not in overdue_notified:  # Если уведомление еще не отправлено
+                            message = (
+                                f"⚠️ *Заказ #{order_id} просрочен!*\n"
+                                f"⏰ Дедлайн отгрузки: {shipment_date_str}\n"
+                                f"Статус: PROCESSING/READY_TO_SHIP"
+                            )
+                            await bot.send_message(
+                                chat_id,
+                                message,
+                                parse_mode="Markdown",
+                                disable_notification=False
+                            )
+                            logger.warning(f"Отправлено уведомление о просроченном заказе #{order_id}")
+                            
+                            # Добавляем заказ в список уведомленных
+                            overdue_notified.append(order_id)
+                            with open(overdue_notified_file, "w") as f:
+                                json.dump(overdue_notified, f)
                 except ValueError:
                     logger.error(f"Неверный формат даты отгрузки для заказа #{order_id}: {shipment_date_str}")
     else:
