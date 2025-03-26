@@ -1,0 +1,58 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-03-26 10:16+0500\n"
+"PO-Revision-Date: 2025-03-26 10:17+0500\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.17.0\n"
+
+msgid "new_order"
+msgstr "New order"
+
+msgid "items"
+msgstr "Items"
+
+msgid "delivery_address"
+msgstr "Delivery address"
+
+msgid "shipment_deadline"
+msgstr "Shipment deadline"
+
+msgid "no_gift"
+msgstr "No gift eligible (amount less than 300 ₽)"
+
+msgid "label_error"
+msgstr "Failed to retrieve label"
+
+msgid "ready_to_ship"
+msgstr "Ready to ship"
+
+msgid "order_overdue"
+msgstr "Order overdue"
+
+msgid "status"
+msgstr "Status"
+
+msgid "order_ready"
+msgstr "Order ready to ship"
+
+msgid "bring_to_pvz"
+msgstr "Bring to pickup point"
+
+msgid "status_update_error"
+msgstr "Error updating status"
+
+msgid "internal_error"
+msgstr "An error occurred"

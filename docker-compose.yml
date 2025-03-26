@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"  # Prometheus metrics
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - CHAT_ID=${CHAT_ID}
+      - YANDEX_API_TOKEN=${YANDEX_API_TOKEN}
+      - CAMPAIGN_ID=${CAMPAIGN_ID}
+      - BUSINESS_ID=${BUSINESS_ID}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - LOCALE=ru
+      - PROMETHEUS_PORT=8000
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6.2
+    ports:
+      - "6379:6379"
