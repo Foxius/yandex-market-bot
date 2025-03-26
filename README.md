@@ -20,7 +20,7 @@ A Telegram bot for monitoring Yandex Market orders with advanced features.
 ## Installation
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone [<repository-url>](https://github.com/Foxius/yandex-market-bot)
    cd project
    ```
 2. Install dependencies:
