@@ -56,3 +56,6 @@ msgstr "Error updating status"
 
 msgid "internal_error"
 msgstr "An error occurred"
+
+msgid "bot_started"
+msgstr "Bot Started"

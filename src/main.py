@@ -7,6 +7,7 @@ from src.api.services import OrderService
 from src.db.redis_db import RedisDB
 from src.config.settings import settings
 from src.utils.logging import logger
+from babel.support import Translations
 
 async def main() -> None:
     """Application entry point."""
@@ -19,6 +20,14 @@ async def main() -> None:
     order_service = OrderService(client, db)
     try:
         logger.info("Starting bot...")
+        # Загружаем переводы для текущей локали
+        translations = Translations.load('locale', [settings.LOCALE])
+        # Отправляем сообщение о старте бота
+        await bot.send_message(
+            settings.CHAT_ID,
+            translations.gettext("bot_started"),
+            parse_mode="Markdown"  # Опционально, если в сообщении есть форматирование
+        )
         await asyncio.gather(
             periodic_check(bot, order_service),
             periodic_overdue_check(bot, order_service),

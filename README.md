@@ -40,6 +40,11 @@ A Telegram bot for monitoring Yandex Market orders with advanced features.
     LOCALE=ru  # or en
     PROMETHEUS_PORT=8000
     ```
+4. Compile Translations:
+    ```bash
+    pybabel compile -d locale -l ru
+    pybabel compile -d locale -l en
+    ```
 4. Run with Docker:
     ```bash
     docker-compose up --build

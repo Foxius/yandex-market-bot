@@ -58,3 +58,5 @@ msgstr "Ошибка при обновлении статуса"
 msgid "internal_error"
 msgstr "Произошла ошибка"
 
+msgid "bot_started"
+msgstr "Бот Запущен"
