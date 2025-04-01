@@ -34,11 +34,11 @@ async def main() -> None:
     try:
         logger.info("Starting bot...")
         translations = Translations.load('locale', [settings.LOCALE])
-        # await bot.send_message(
-        #     settings.CHAT_ID,
-        #     translations.gettext("bot_started"),
-        #     parse_mode="Markdown"
-        # )
+        await bot.send_message(
+            settings.CHAT_ID,
+            translations.gettext("bot_started"),
+            parse_mode="Markdown"
+        )
         await asyncio.gather(
             periodic_check(bot, order_service),
             periodic_overdue_check(bot, order_service),
