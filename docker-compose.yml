@@ -2,20 +2,24 @@ services:
   app:
     build: .
     ports:
-      - "8000:8000"  # Prometheus metrics
+      - "8000:8000"
     env_file:
       - .env
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - CHAT_ID=${CHAT_ID}
-      - YANDEX_API_TOKEN=${YANDEX_API_TOKEN}
-      - CAMPAIGN_ID=${CAMPAIGN_ID}
-      - BUSINESS_ID=${BUSINESS_ID}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_DB=0
       - LOCALE=ru
       - PROMETHEUS_PORT=8000
+      - YANDEX_ENABLED=${YANDEX_ENABLED}
+      - YANDEX_API_TOKEN=${YANDEX_API_TOKEN}
+      - YANDEX_CAMPAIGN_ID=${YANDEX_CAMPAIGN_ID}
+      - YANDEX_BUSINESS_ID=${YANDEX_BUSINESS_ID}
+      - OZON_ENABLED=${OZON_ENABLED}
+      - OZON_API_KEY=${OZON_API_KEY}
+      - OZON_CLIENT_ID=${OZON_CLIENT_ID}
     depends_on:
       - redis
     restart: unless-stopped
