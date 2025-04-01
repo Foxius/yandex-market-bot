@@ -2,7 +2,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from src.bot.handlers import router
-from src.bot.tasks import periodic_check, periodic_overdue_check
+from src.bot.tasks import periodic_check, periodic_overdue_check, daily_plan  # Добавляем daily_plan
 from src.api.yandex_client import YandexAPIClient
 from src.api.ozon_client import OzonAPIClient
 from src.api.services import OrderService
@@ -54,6 +54,7 @@ async def main() -> None:
         await asyncio.gather(
             periodic_check(bot, order_service),
             periodic_overdue_check(bot, order_service),
+            daily_plan(bot, order_service),  # Добавляем задачу ежедневного плана
             dp.start_polling(bot)
         )
     except Exception as e:

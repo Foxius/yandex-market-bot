@@ -28,6 +28,10 @@ class OrderService:
         self.db = db
         self.translations = Translations.load('locale', [settings.LOCALE])
 
+    def get_parser(self, platform: str):
+        """Get the appropriate parser for the platform."""
+        return get_parser(platform)  # Добавляем метод для доступа к парсеру
+
     def _translate(self, message: str) -> str:
         """Translate a message using the current locale."""
         return self.translations.gettext(message)
