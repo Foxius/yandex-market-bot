@@ -34,9 +34,21 @@ async def main() -> None:
     try:
         logger.info("Starting bot...")
         translations = Translations.load('locale', [settings.LOCALE])
+
+        # Формируем стартовое сообщение с галочками и крестиками
+        services_status = [
+            f"{'✅' if settings.YANDEX_ENABLED else '❌'} Yandex",
+            f"{'✅' if settings.OZON_ENABLED else '❌'} Ozon"
+        ]
+        services_text = "\n".join(services_status)
+        start_message = (
+            f"🤖 *{translations.gettext('bot_started')}*\n\n"
+            f"Статус сервисов:\n{services_text}"
+        )
+
         await bot.send_message(
             settings.CHAT_ID,
-            translations.gettext("bot_started"),
+            start_message,
             parse_mode="Markdown"
         )
         await asyncio.gather(
