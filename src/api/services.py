@@ -129,7 +129,17 @@ class OrderService:
                 for order_data in orders:
                     order = parser.parse(order_data)
                     try:
-                        shipment_date = datetime.strptime(order.delivery.shipment_date, "%Y-%m-%dT%H:%M:%SZ")
+                        # Пробуем разные форматы даты
+                        shipment_date_str = order.delivery.shipment_date
+                        for date_format in ["%Y-%m-%dT%H:%M:%SZ", "%d-%m-%Y"]:  # Добавляем DD-MM-YYYY
+                            try:
+                                shipment_date = datetime.strptime(shipment_date_str, date_format)
+                                break
+                            except ValueError:
+                                continue
+                        else:
+                            raise ValueError(f"Unknown date format: {shipment_date_str}")
+                        
                         if (current_date - shipment_date).days >= 1 and order.id not in overdue_notified:
                             message = (
                                 f"⚠️ *{self._translate('order_overdue')} #{order.id} ({platform})*\n"
@@ -140,8 +150,8 @@ class OrderService:
                             logger.warning(f"[{platform}] Sent overdue notification for order #{order.id}")
                             self.db.save_overdue_notified(order.id, platform)
                             OVERDUE_ORDERS_TOTAL.inc()
-                    except ValueError:
-                        logger.error(f"[{platform}] Invalid shipment date format for order #{order.id}: {order.delivery.shipment_date}")
+                    except ValueError as ve:
+                        logger.error(f"[{platform}] Invalid shipment date format for order #{order.id}: {shipment_date_str} - {str(ve)}")
             except requests.exceptions.RequestException as e:
                 if hasattr(e, 'response') and e.response is not None:
                     logger.error(f"[{platform}] Error checking overdue orders: HTTP {e.response.status_code} - {e.response.text}")
