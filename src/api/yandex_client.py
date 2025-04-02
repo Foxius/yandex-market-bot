@@ -64,8 +64,7 @@ class YandexAPIClient(MarketplaceClient):
         today=datetime.today() - timedelta(days=1)
         tommorow = datetime.today() + timedelta(days=1)
         payload = {"dateFrom": today.strftime("%Y-%m-%d"),
-                   "dateTo": tommorow.strftime("%Y-%m-%d"),
-                   "statuses": ["OUTBOUND_CONFIRMED"]}
+                   "dateTo": tommorow.strftime("%Y-%m-%d")}
         response = requests.put(
             f"{self.base_url}/campaigns/{self.campaign_id}/first-mile/shipments",
             headers=self.headers,
