@@ -32,7 +32,7 @@ msgid "shipment_deadline"
 msgstr "Дедлайн отгрузки"
 
 msgid "no_gift"
-msgstr "Подарок не полагается (сумма менее 300 ₽)"
+msgstr "Подарок не полагается (сумма менее {amount} ₽)"
 
 msgid "label_error"
 msgstr "Не удалось получить этикетку"
@@ -60,3 +60,24 @@ msgstr "Произошла ошибка"
 
 msgid "bot_started"
 msgstr "Бот Запущен"
+
+msgid "daily_plan"
+msgstr "План на сегодня"
+
+msgid "orders"
+msgstr "заказы"
+
+msgid "bring_to_pvz_order"
+msgstr "Отнести в ПВЗ заказ"
+
+msgid "to_address"
+msgstr "по адресу"
+
+msgid "give_to_courier"
+msgstr "Отдать курьеру заказ"
+
+msgid "fetch_orders_error"
+msgstr "Ошибка при получении заказов"
+
+msgid "no_tasks_today"
+msgstr "На сегодня задач нет!"

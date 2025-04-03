@@ -14,6 +14,9 @@ class Settings:
     PROMETHEUS_PORT: int = int(os.getenv("PROMETHEUS_PORT", 8000))
     LOCALE: str = os.getenv("LOCALE", "ru")
 
+    GIFT_THRESHOLD: float = float(os.getenv("GIFT_THRESHOLD", 300.0))  # Порог для подарка
+
+
     # Yandex Market settings
     YANDEX_API_TOKEN: str = os.getenv("YANDEX_API_TOKEN")
     YANDEX_API_URL: str = "https://api.partner.market.yandex.ru"
@@ -49,7 +52,8 @@ class Settings:
         for name, value in required_general.items():
             if not value:
                 raise ValueError(f"Environment variable {name} is not set!")
-
+        if self.GIFT_THRESHOLD < 0:
+            raise ValueError("GIFT_THRESHOLD must be non-negative!")
         if self.YANDEX_ENABLED:
             required_yandex = {
                 "YANDEX_API_TOKEN": self.YANDEX_API_TOKEN,

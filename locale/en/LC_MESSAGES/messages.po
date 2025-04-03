@@ -31,7 +31,7 @@ msgid "shipment_deadline"
 msgstr "Shipment deadline"
 
 msgid "no_gift"
-msgstr "No gift eligible (amount less than 300 ₽)"
+msgstr "No gift eligible (amount less than {amount} ₽)"
 
 msgid "label_error"
 msgstr "Failed to retrieve label"
@@ -59,3 +59,24 @@ msgstr "An error occurred"
 
 msgid "bot_started"
 msgstr "Bot Started"
+
+msgid "daily_plan"
+msgstr "Daily Plan"
+
+msgid "orders"
+msgstr "orders"
+
+msgid "bring_to_pvz_order"
+msgstr "Bring order to pickup point"
+
+msgid "to_address"
+msgstr "to address"
+
+msgid "give_to_courier"
+msgstr "Give order to courier"
+
+msgid "fetch_orders_error"
+msgstr "Error fetching orders"
+
+msgid "no_tasks_today"
+msgstr "No tasks for today!"

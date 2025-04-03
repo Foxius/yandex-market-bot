@@ -70,12 +70,11 @@ async def daily_plan(bot: Bot, order_service: OrderService) -> None:
 
 async def send_daily_plan(bot: Bot, order_service: OrderService, chat_id: str) -> None:
     """Generate and send the daily plan based on current orders."""
-    message_lines = ["📅 *План на сегодня*"]
+    message_lines = [f"📅 *{order_service._translate('daily_plan')}*"]
     has_tasks = False
 
     for platform, client in order_service.clients.items():
         try:
-            # Проверяем заказы в статусе "готово к отправке"
             status = "PROCESSING" if platform == "yandex" else "awaiting_deliver"
             substatus = "READY_TO_SHIP" if platform == "yandex" else None
             orders = client.get_orders(status, substatus)
@@ -83,23 +82,27 @@ async def send_daily_plan(bot: Bot, order_service: OrderService, chat_id: str) -
 
             if orders:
                 has_tasks = True
-                message_lines.append(f"\n*{platform.capitalize()} заказы:*")
+                message_lines.append(f"\n*{platform.capitalize()} {order_service._translate('orders')}:*")
                 for order_data in orders:
                     order = parser.parse(order_data)
                     order_id = order.id
                     
                     if platform == "yandex":
                         pvz_address = client.get_pickup_point_address(order_id)
-                        message_lines.append(f"  • Отнести в ПВЗ заказ #{order_id} по адресу: {pvz_address}")
+                        message_lines.append(
+                            f"  • {order_service._translate('bring_to_pvz_order')} #{order_id} "
+                            f"{order_service._translate('to_address')}: {pvz_address}"
+                        )
                     elif platform == "ozon":
-                        # Предполагаем, что заказы уже в отгрузке, так как статус awaiting_deliver
-                        message_lines.append(f"  • Отдать курьеру заказ #{order_id}")
+                        message_lines.append(
+                            f"  • {order_service._translate('give_to_courier')} #{order_id}"
+                        )
         except Exception as e:
             logger.error(f"[{platform}] Error fetching orders for daily plan: {str(e)}")
-            message_lines.append(f"\n⚠️ Ошибка при получении заказов {platform}: {str(e)}")
+            message_lines.append(f"\n⚠️ {order_service._translate('fetch_orders_error')} {platform}: {str(e)}")
 
     if not has_tasks:
-        message_lines.append("\n📌 На сегодня задач нет!")
+        message_lines.append(f"\n📌 {order_service._translate('no_tasks_today')}")
 
     message = "\n".join(message_lines)
     await bot.send_message(chat_id, message, parse_mode="Markdown", disable_notification=False)

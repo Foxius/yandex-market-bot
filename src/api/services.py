@@ -20,10 +20,19 @@ OVERDUE_ORDERS_TOTAL = Counter('overdue_orders_total', 'Total number of overdue 
 API_ERRORS_TOTAL = Counter('api_errors_total', 'Total number of API errors')
 
 class OrderService:
-    """Service for managing marketplace orders."""
+    """Service for managing marketplace orders and sending notifications via Telegram.
+
+    This class integrates with marketplace APIs (Yandex, Ozon) to fetch orders,
+    track their status, and notify users about new or overdue orders.
+    """
 
     def __init__(self, clients: Dict[str, MarketplaceClient], db: RedisDB):
-        """Initialize the order service."""
+        """Initialize the OrderService with marketplace clients and Redis database.
+
+        Args:
+            clients: Dictionary mapping platform names (e.g., "yandex", "ozon") to their API clients.
+            db: Redis database instance for storing sent order IDs and overdue notifications.
+        """
         self.clients = clients
         self.db = db
         self.translations = Translations.load('locale', [settings.LOCALE])
@@ -37,7 +46,16 @@ class OrderService:
         return self.translations.gettext(message)
 
     async def check_new_orders(self, bot: Bot, chat_id: str) -> None:
-        """Check for new orders in awaiting_packaging and send notifications."""
+        """"Check for new orders in 'awaiting_packaging' status and send notifications.
+
+        Iterates over enabled marketplace clients, fetches orders with the appropriate status
+        (e.g., PROCESSING/STARTED for Yandex, awaiting_packaging for Ozon), and sends Telegram
+        notifications for orders not yet notified.
+
+        Args:
+            bot: Telegram Bot instance for sending messages.
+            chat_id: Telegram chat ID where notifications are sent.
+        """
         for platform, client in self.clients.items():
             try:
                 status = "PROCESSING" if platform == "yandex" else "awaiting_packaging"
@@ -65,7 +83,18 @@ class OrderService:
                 API_ERRORS_TOTAL.inc()
 
     async def notify_order(self, bot: Bot, chat_id: str, order: Order, platform: str, client: MarketplaceClient) -> None:
-        """Send a notification for a new order with label."""
+        """Send a Telegram notification for a new order, including a PDF label if available.
+
+        Constructs a detailed message with order items, delivery address, and shipment deadline.
+        Attaches a PDF label if provided by the marketplace API and pins the message in the chat.
+
+        Args:
+            bot: Telegram Bot instance.
+            chat_id: Telegram chat ID.
+            order: Parsed Order object containing order details.
+            platform: Platform name ("yandex" or "ozon").
+            client: Marketplace API client instance.
+        """
         shop_skus = [item.shop_sku for item in order.items]
         market_sku_mapping = client.get_market_sku(shop_skus)
         items_text = []
@@ -78,7 +107,10 @@ class OrderService:
             )
             items_text.append(f"  • [{item.offer_name}]({url}) (x{item.count})")
         items_text = "\n".join(items_text)
-        gift_notice = f"\n\n🎁 *{self._translate('no_gift')}*" if order.items_total < 300 else ""
+        gift_notice = (
+            f"\n\n🎁 *{self._translate('no_gift').format(amount=settings.GIFT_THRESHOLD)}*"
+            if order.items_total < settings.GIFT_THRESHOLD else ""
+        )
         full_address = ", ".join(filter(None, [
             order.delivery.address.country, order.delivery.address.postcode,
             order.delivery.address.city, order.delivery.address.street,

@@ -7,7 +7,10 @@ from src.api.base_client import MarketplaceClient
 from src.utils.logging import logger
 
 class YandexAPIClient(MarketplaceClient):
-    """Client for interacting with Yandex Market API."""
+    """Client for interacting with the Yandex Market API.
+
+    Provides methods to fetch orders, labels, and update order statuses for a specific campaign.
+    """
 
     def __init__(self, api_token: str, base_url: str, campaign_id: str, business_id: str):
         self.api_token = api_token
@@ -22,6 +25,18 @@ class YandexAPIClient(MarketplaceClient):
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=4, max=10))
     def get_orders(self, status: str, substatus: str) -> List[Dict]:
+        """Fetch orders from Yandex Market by status and substatus.
+
+        Args:
+            status: Order status (e.g., "PROCESSING").
+            substatus: Order substatus (e.g., "STARTED").
+
+        Returns:
+            List of order dictionaries as returned by the API.
+
+        Raises:
+            requests.exceptions.RequestException: If the API request fails after retries.
+        """
         response = requests.get(
             f"{self.base_url}/campaigns/{self.campaign_id}/orders?status={status}&substatus={substatus}",
             headers=self.headers
