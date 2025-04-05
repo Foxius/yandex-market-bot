@@ -43,7 +43,7 @@ def setup_logging() -> logging.Logger:
     handler.addFilter(PlatformColorFilter())
     
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     logger.addHandler(handler)
     return logger
 
